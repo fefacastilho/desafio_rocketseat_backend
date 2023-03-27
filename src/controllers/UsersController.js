@@ -60,6 +60,21 @@ class UsersController {
         user.password = await hash(password, 8);
       }
 
+     
+      const AdminBro = require('admin-bro')
+      const AdminBroExpress = require('@admin-bro/express')
+
+      const express = require('express')
+      const app = express()
+
+      const adminBro = new AdminBro({
+          databases: [],
+          rootPath: '/admin',
+        })
+
+      const router = AdminBroExpress.buildRouter(adminBro)
+
+
       await database.run(`
        UPDATE users SET
        name = ?,
@@ -68,7 +83,9 @@ class UsersController {
        updated_at = DATETIME('now')
        WHERE id = ?`,
       [user.name, user.email, user.password, id]
-      );
+     
+       );
+
       return response.json();
    }
  }
